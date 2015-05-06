@@ -1,0 +1,13 @@
+create table news( #新闻表
+  	id int auto_increment primary key comment '主键 自增',
+  	website varchar(50) not null comment '网站名称 不为空',
+  	url varchar(500) unique not null comment '网址 不为空 唯一',
+  	state int not null comment '状态 不为空 状态:1 初始 2 采集地址成功 3采集地址失败 4 采集内容成功 5 采集内容失败 6 仅展示',
+  	times int not null comment '采集次数 不为空',
+  	title varchar(500) comment '抬头',
+  	content longtext comment '内容',
+  	create_date varchar(8) not null comment '创建日期 不为空',
+  	create_time varchar(6) not null comment '创建时间 不为空',
+  	update_date varchar(8) comment '修改日期',
+  	update_time varchar(6) comment '修改时间'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

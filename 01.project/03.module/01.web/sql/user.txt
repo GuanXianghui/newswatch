@@ -1,0 +1,13 @@
+create table user( #用户表
+  	id int auto_increment primary key comment '主键 自增',
+  	name varchar(50) unique not null comment '姓名 不为空 唯一',
+  	user_type int not null comment '用户类型 不为空 1 普通用户 2 管理员',
+  	password varchar(32) not null comment '密码 md5签名 不为空',
+  	create_date varchar(8) not null comment '创建日期 不为空',
+  	create_time varchar(6) not null comment '创建时间 不为空'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+#创建用户 密码 123qwe
+#insert into user(name,user_type,password,create_date,create_time)
+#values('gxx',1,'ff38302b6cfefb29cdad27730d74a53a','20150503','135700');

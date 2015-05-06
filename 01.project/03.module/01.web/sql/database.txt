@@ -1,0 +1,2 @@
+create database newswatch character set utf8 collate utf8_general_ci;		#数据库
+use newswatch;

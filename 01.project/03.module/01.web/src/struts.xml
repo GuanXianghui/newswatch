@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.action.extension" value="do"/>
+    <!-- 搞了半天原来上传图片过大struts2(默认2M封顶)自动跳到input的结果集去，一般是不需要input的结果集的 -->
+    <!-- 修改struts2配置上传文件最大Size 100M -->
+    <constant name="struts.multipart.maxSize" value="100000000"/>
+    <package name="default" namespace="/" extends="struts-default">
+        <!-- 图片验证码 -->
+        <action name="securityCodeImage" class="com.newswatch.SecurityCodeImageAction">
+            <result name="success" type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">imageStream</param>
+                <param name="bufferSize">2048</param>
+            </result>
+        </action>
+        <action name="login" class="com.newswatch.LoginAction">
+            <result>
+                /login.jsp
+            </result>
+            <result name="error">
+                /login.jsp
+            </result>
+        </action>
+        <action name="createUrlFilter" class="com.newswatch.CreateUrlFilterAction">
+        </action>
+        <action name="deleteUrlFilter" class="com.newswatch.DeleteUrlFilterAction">
+        </action>
+    </package>
+
+    <!--
+     <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+     <constant name="struts.devMode" value="false" />
+
+     <include file="example.xml"/>
+
+     <package name="default" namespace="/" extends="struts-default">
+         <default-action-ref name="index" />
+         <action name="index">
+             <result type="redirectAction">
+                 <param name="actionName">HelloWorld</param>
+                 <param name="namespace">/example</param>
+             </result>
+         </action>
+     </package>
+      -->
+</struts>
+
+
+
