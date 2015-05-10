@@ -1,4 +1,4 @@
-package com.newswatch.people;
+package com.newswatch;
 
 import java.util.Date;
 

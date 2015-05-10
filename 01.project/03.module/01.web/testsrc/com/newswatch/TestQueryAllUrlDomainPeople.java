@@ -1,4 +1,4 @@
-package com.newswatch.people;
+package com.newswatch;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.List;
 import com.newswatch.dao.NewsDao;
 
 /**
- * 查询库中新闻的所有域名前缀
+ * 查询所有域名前缀
  * <dl>
  *    <dt><b>Title:</b></dt>
  *    <dd>
@@ -60,12 +60,12 @@ public class TestQueryAllUrlDomainPeople {
 			if(index > 0){
 				url = url.substring(0, index);
 			}
-			if(!domainList.contains(url)){
-				domainList.add(url);
+			if(!domainList.contains(httpPref + url)){
+				domainList.add(httpPref + url);
 			}
 		}
 		Collections.sort(domainList);
-		System.out.println("总域名数:" + domainList.size());
+		System.out.println(domainList.size());
 		for(int i=0;i<domainList.size();i++){
 			System.out.println(domainList.get(i));
 		}

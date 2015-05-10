@@ -1,4 +1,4 @@
-package com.newswatch.people;
+package com.newswatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.newswatch.dao.NewsDao;
-import com.newswatch.dao.UrlFilterDao;
 import com.newswatch.entities.News;
-import com.newswatch.entities.UrlFilter;
 import com.newswatch.utils.DateUtils;
 import com.newswatch.utils.HttpClientUtils;
 
@@ -149,53 +147,27 @@ public class TestGrabPeople {
 	 */
 	public void addUrl(List<String> list, String url) throws Exception {
 		url = StringUtils.trim(url);
-		/**
-		 * 过滤白名单
-		 */
-		List<UrlFilter> whiteList = UrlFilterDao.
-				queryUrlFilterByWebsiteAndType(PEOPLE_WEBSITE, UrlFilter.TYPE_WHITE);
-		for(UrlFilter urlFilter : whiteList){
-			if(UrlFilter.FILTER_TYPE_START_WITH == urlFilter.getFilterType()){
-				if(!url.startsWith(urlFilter.getFilterUrlPart())){
-					return;
-				}
-			}
-			if(UrlFilter.FILTER_TYPE_INDEX_OF == urlFilter.getFilterType()){
-				if(url.indexOf(urlFilter.getFilterUrlPart()) == -1){
-					return;
-				}
-			}
-			if(UrlFilter.FILTER_TYPE_END_WITH == urlFilter.getFilterType()){
-				if(!url.endsWith(urlFilter.getFilterUrlPart())){
-					return;
-				}
-			}
+		if(url.indexOf("people.com.cn") == -1){
+			return;
 		}
-		/**
-		 * 过滤黑名单
-		 */
-		List<UrlFilter> blackList = UrlFilterDao.
-				queryUrlFilterByWebsiteAndType(PEOPLE_WEBSITE, UrlFilter.TYPE_BLACK);
-		for(UrlFilter urlFilter : blackList){
-			if(UrlFilter.FILTER_TYPE_START_WITH == urlFilter.getFilterType()){
-				if(url.startsWith(urlFilter.getFilterUrlPart())){
-					return;
-				}
-			}
-			if(UrlFilter.FILTER_TYPE_INDEX_OF == urlFilter.getFilterType()){
-				if(url.indexOf(urlFilter.getFilterUrlPart()) > -1){
-					return;
-				}
-			}
-			if(UrlFilter.FILTER_TYPE_END_WITH == urlFilter.getFilterType()){
-				if(url.endsWith(urlFilter.getFilterUrlPart())){
-					return;
-				}
-			}
+		if(url.endsWith(".do") || url.indexOf(".do?") > -1){
+			return;
 		}
-		/**
-		 * 判已存在
-		 */
+		if(url.indexOf("mailto:") > -1){
+			return;
+		}
+		if(url.indexOf("bbs1.people.com.cn") > -1){
+			return;
+		}
+		if(url.indexOf("blog.people.com.cn") > -1){
+			return;
+		}
+		if(url.indexOf("chinapic.people.com.cn") > -1){
+			return;
+		}
+		if(url.indexOf("ads.people.com.cn") > -1){
+			return;
+		}
 		url = url.replaceAll("'", "\"");
 		if(urlList.indexOf(url) > -1){
 			return;
