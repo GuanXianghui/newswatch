@@ -1,9 +1,10 @@
-package com.newswatch;
+package com.newswatch.people;
 
 import com.newswatch.dao.NewsDao;
+import com.newswatch.entities.UrlFilter;
 
 /**
- * 查询所有域名前缀
+ * 查询所有域名前缀的数量
  * <dl>
  *    <dt><b>Title:</b></dt>
  *    <dd>
@@ -20,7 +21,9 @@ import com.newswatch.dao.NewsDao;
  * @since newswatch
  *
  */
-public class TestCountGroupByUrlDomain {
+public class TestCountGroupByUrlDomainPeople {
+	public static final String PEOPLE_WEBSITE = "人民网";
+	
 	/**
 	 * 处理方法
 	 */
@@ -315,7 +318,7 @@ public class TestCountGroupByUrlDomain {
 				"http://zj.people.com.cn";
 		String[] domainArray = domains.split(",");
 		for(String domain : domainArray){
-			int count = NewsDao.countNewsByLikeUrl(domain);
+			int count = NewsDao.countNewsByWebsiteAndPositionAndUrl(PEOPLE_WEBSITE, UrlFilter.FILTER_TYPE_INDEX_OF,domain);
 			if(count > 200){
 				System.out.println("count:[" + count + "],domain:[" + domain + "]");
 			}
@@ -328,7 +331,7 @@ public class TestCountGroupByUrlDomain {
 	 * @throws Exception
 	 */
 	public static void main(String[] params) throws Exception{
-		TestCountGroupByUrlDomain queryAllUrlDomainPeople = new TestCountGroupByUrlDomain();
+		TestCountGroupByUrlDomainPeople queryAllUrlDomainPeople = new TestCountGroupByUrlDomainPeople();
 		queryAllUrlDomainPeople.process();
 	}
 }

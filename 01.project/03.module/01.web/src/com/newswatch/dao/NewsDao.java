@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.newswatch.entities.News;
+import com.newswatch.entities.UrlFilter;
 
 /**
  * 新闻实体操作类
@@ -206,15 +207,14 @@ public class NewsDao {
     }
 
     /**
-     * 根据地址模糊查新闻
+     * 查询新闻总数
      *
      * @param url
      * @return
      * @throws Exception
      */
-    public static int countNewsByLikeUrl(String url) throws Exception {
-        String sql = "SELECT count(1) count FROM news " +
-                "WHERE url like '" + url + "%'";
+    public static int countAllNews() throws Exception {
+        String sql = "SELECT count(1) count FROM news";
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
         ResultSet rs = DB.executeQuery(c, stmt, sql);
@@ -232,5 +232,65 @@ public class NewsDao {
             DB.close(stmt);
             DB.close(c);
         }
+    }
+
+    /**
+     * 根据网站，位置和地址模糊查新闻总数
+     *
+     * @param url
+     * @return
+     * @throws Exception
+     */
+    public static int countNewsByWebsiteAndPositionAndUrl(String website, int position, String url) throws Exception {
+        String sql = "SELECT count(1) count FROM news " +
+                "WHERE website='" + website + "' AND url";
+        if(UrlFilter.FILTER_TYPE_START_WITH == position){
+        	sql += " like '" + url + "%'";
+        }
+        if(UrlFilter.FILTER_TYPE_INDEX_OF == position){
+        	sql += " like '%" + url + "%'";
+        }
+        if(UrlFilter.FILTER_TYPE_END_WITH == position){
+        	sql += " like '%" + url + "'";
+        }
+        Connection c = DB.getConn();
+        Statement stmt = DB.createStatement(c);
+        ResultSet rs = DB.executeQuery(c, stmt, sql);
+        try {
+            if (rs == null) {
+                throw new RuntimeException("数据库操作出错，请重试！");
+            }
+            while (rs.next()) {
+                int count = rs.getInt("count");
+                return count;
+            }
+            return 0;
+        } finally {
+            DB.close(rs);
+            DB.close(stmt);
+            DB.close(c);
+        }
+    }
+
+    /**
+     * 根据位置和地址模糊删除新闻
+     *
+     * @param url
+     * @return
+     * @throws Exception
+     */
+    public static void deleteNewsByBlackListWithWebsiteAndPositionAndUrl(String website, int position, String url) throws Exception {
+        String sql = "DELETE FROM news " +
+                "WHERE website='" + website + "' AND url";
+        if(UrlFilter.FILTER_TYPE_START_WITH == position){
+        	sql += " like '" + url + "%'";
+        }
+        if(UrlFilter.FILTER_TYPE_INDEX_OF == position){
+        	sql += " like '%" + url + "%'";
+        }
+        if(UrlFilter.FILTER_TYPE_END_WITH == position){
+        	sql += " like '%" + url + "'";
+        }
+        DB.executeUpdate(sql);
     }
 }
