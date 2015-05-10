@@ -7,7 +7,6 @@ import com.newswatch.entities.UrlFilter;
 import com.newswatch.interfaces.UserInterface;
 import com.newswatch.utils.DateUtils;
 import com.newswatch.utils.TokenUtil;
-import com.opensymphony.xwork2.inject.util.Function;
 
 /**
  * 新增地址过滤
