@@ -12,8 +12,8 @@ import com.newswatch.utils.securitycode.SecurityImage;
  * @author dongliyang
  */
 public class SecurityCodeImageAction extends BaseAction implements BaseInterface {
-    
-    //图片流
+	private static final long serialVersionUID = 1L;
+	//图片流
     private ByteArrayInputStream imageStream;
 
     public ByteArrayInputStream getImageStream() {

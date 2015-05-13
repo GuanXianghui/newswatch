@@ -1,5 +1,5 @@
-<%@page import="com.newswatch.entities.UrlFilter"%>
-<%@page import="com.newswatch.dao.UrlFilterDao"%>
+<%@page import="com.newswatch.entities.DomainFilter"%>
+<%@page import="com.newswatch.dao.DomainFilterDao"%>
 <%@ page import="org.apache.struts2.ServletActionContext" %>
 <%@ page import="java.io.File" %>
 <%@ page import="java.util.List" %>
@@ -9,7 +9,7 @@
         //外层
         outLayer = "配置模块";
         //内层
-        inLayer = "地址过滤配置";
+        inLayer = "域名过滤配置";
         //网站名称
         String website = new String(StringUtils.trimToEmpty(request.getParameter("website")).getBytes("ISO-8859-1"), "UTF-8");
         //类型
@@ -21,17 +21,8 @@
         } catch (Exception e) {
         	type = 0;
         }
-        //过滤类型
-        String filterTypeStr = StringUtils.trimToEmpty(request.getParameter("filterType"));
-        //过滤类型
-        int filterType;
-        try {
-        	filterType = Integer.parseInt(filterTypeStr);
-        } catch (Exception e) {
-        	filterType = 0;
-        }
-        //模糊过滤网址
-        String filterUrlPart = StringUtils.trimToEmpty(request.getParameter("filterUrlPart"));
+        //模糊过滤域名
+        String domain = StringUtils.trimToEmpty(request.getParameter("domain"));
         //备注
         String remark = new String(StringUtils.trimToEmpty(request.getParameter("remark")).getBytes("ISO-8859-1"), "UTF-8");
         //当前页数
@@ -44,11 +35,11 @@
             pageNum = 1;
         }
         //页面大小
-        int pageSize = Integer.parseInt(PropertyUtil.getInstance().getProperty(BaseInterface.URL_FILTER_PAGE_SIZE));
+        int pageSize = Integer.parseInt(PropertyUtil.getInstance().getProperty(BaseInterface.DOMAIN_FILTER_PAGE_SIZE));
         /**
          * 查询结果数量
          */
-        int count = UrlFilterDao.countUrlFilterByConditions(website, type, filterType, filterUrlPart, remark, pageNum);
+        int count = DomainFilterDao.countDomainFilterByConditions(website, type, domain, remark, pageNum);
         //是否为空
         boolean isEmpty = count == 0;
         //总页数
@@ -58,14 +49,14 @@
             pageNum = pageCount;
         }
         //根据页码查询
-        List<UrlFilter> urlFilterList = UrlFilterDao.queryUrlFilterByConditions(website, type, filterType, filterUrlPart, remark, pageNum);
+        List<DomainFilter> domainFilterList = DomainFilterDao.queryDomainFilterByConditions(website, type, domain, remark, pageNum);
     %>
 <html>
 <head>
-    <title>地址过滤配置</title>
+    <title>域名过滤配置</title>
     <script type="text/javascript" src="<%=baseUrl%>scripts/jquery-min.js"></script>
     <script type="text/javascript" src="<%=baseUrl%>scripts/base.js"></script>
-    <script type="text/javascript" src="<%=baseUrl%>scripts/urlFilterConfig.js"></script>
+    <script type="text/javascript" src="<%=baseUrl%>scripts/domainFilterConfig.js"></script>
     <!--日期控件-->
     <link type="text/css" rel="stylesheet" href="css/jquery-ui.css"/>
     <script type="text/javascript" src="<%=baseUrl%>scripts/jquery-ui.min.js"></script>
@@ -82,14 +73,24 @@
         var initWebsite = "<%=website%>";
         //初始化类型
         var initType = <%=type%>;
-        //初始化过滤类型
-        var initFilterType = <%=filterType%>;
-        //初始化模糊过滤网址
-        var initFilterUrlPart = "<%=filterUrlPart%>";
+        //初始化模糊过滤域名
+        var initDomain = "<%=domain%>";
         //初始化备注
         var initRemark = "<%=remark%>";
     </script>
     <style type="text/css">
+        #selectTable0 td {
+            text-align: center;
+        }
+        #selectTable0 th {
+            text-align: center;
+        }
+        #cwr_table0 td {
+            text-align: center;
+        }
+        #cwr_table0 th {
+            text-align: center;
+        }
         #selectTable td {
             text-align: center;
         }
@@ -124,7 +125,79 @@
 <div id="main-content">
     <div class="content-box">
         <div class="content-box-header">
-            <h3>地址过滤配置</h3>
+            <h3>域名过滤配置</h3>
+        </div>
+        <div class="content-box-content">
+            <div class="tab-content default-tab">
+			    <div id="message_id_0" class="notification information png_bg" style="display: none;">
+			        <a href="#" class="close">
+			            <img src="images/icons/cross_grey_small.png" title="关闭" alt="关闭"/>
+			        </a>
+			
+			        <div id="message_id_0_content"> 提示信息！</div>
+			    </div>
+                <form>
+                    <div align="center">
+                        <table id="selectTable0">
+                            <tr>
+                                <td style="width: 13%; text-align: right;">
+                                	网站名称：
+                                </td>
+                                <td style="width: 20%; text-align: left;">
+                                	<select class="text-input medium-input" id="website0">
+	                                	<%
+	                                		for(int i=0;i<websiteArray.length;i++){
+	                            		%>
+	                            			<option value="<%=websiteArray[i] %>"<%=StringUtils.equals(websiteArray[i], website)?" SELECTED":"" %>><%=websiteArray[i] %></option>
+										<%	
+	                                		}
+	                                	%>
+	                                </select>
+                                </td>
+                                <td style="width: 70%; text-align: left;">
+                        			<input class="button" type="button" onclick="refreshNeedConfigDomain();" value="刷新" />
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <table id="cwr_table0" style="display: none;">
+                        <thead>
+                        <tr>
+                            <th>网站名称</th>
+                            <th>域名</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="cwr_tbody0">
+                        <tr>
+                            <td>
+                                	人民网
+                            </td>
+                            <td>
+                                people.com.cn
+                            </td>
+                            <td>
+                                xxx
+                            </td>
+                            <td>
+                            	<input class="button" type="button" onclick="xxx('');" value="白名单" />
+                            	<input class="button" type="button" onclick="xxx('');" value="黑名单" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-box">
+        <div class="content-box-header">
+            <h3>域名过滤查询</h3>
         </div>
         <div class="content-box-content">
             <div class="tab-content default-tab">
@@ -165,34 +238,24 @@
 	                                </select>
                                 </td>
                                 <td style="width: 13%; text-align: right;">
-                               	 	过滤类型：
+                               		模糊过滤域名：
                                 </td>
                                 <td style="width: 20%; text-align: left;">
-                               	 	<select class="text-input medium-input" id="filterType">
-		                                <option value="0"<%=filterType==0?" SELECTED":"" %>>全部</option>
-		                                <option value="1"<%=filterType==1?" SELECTED":"" %>>包含</option>
-		                                <option value="2"<%=filterType==2?" SELECTED":"" %>>开始</option>
-		                                <option value="3"<%=filterType==3?" SELECTED":"" %>>结束</option>
-	                                </select>
+                               		<input type="text" class="text-input large-input" id="domain" value="<%=domain%>">
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 13%; text-align: right;">
-                               		模糊过滤网址：
-                                </td>
-                                <td style="width: 20%; text-align: left;">
-                               		<input type="text" class="text-input large-input" id="filterUrlPart" value="<%=filterUrlPart%>">
-                                </td>
                                 <td style="width: 13%; text-align: right;">
                                		备注：
                                 </td>
                                 <td style="width: 20%; text-align: left;">
                                		<input type="text" class="text-input large-input" id="remark" value="<%=remark%>">
                                 </td>
-                                <td colspan="2" style="width: 30%; text-align: center;">
+                                <td colspan="2" style="width: 63%; text-align: center;">
                         			<input class="button" type="button" onclick="jump2page(1);" value="查询" />
-                        			<input class="button" type="button" onclick="javascript:location.href='createUrlFilter.jsp';" value="新增" />
                                 </td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </table>
                     </div>
@@ -203,8 +266,7 @@
                             <th>ID</th>
                             <th>网站名称</th>
                             <th>类型</th>
-                            <th>过滤类型</th>
-                            <th>模糊过滤网址</th>
+                            <th>域名</th>
                             <th>备注</th>
                             <th>创建日期</th>
                             <th>创建时间</th>
@@ -213,7 +275,7 @@
                         </thead>
                         <tfoot>
                         <tr>
-                            <td colspan="9">
+                            <td colspan="8">
                                 <div class="pagination">
                                 	总数:[<%=count %>] 总页数:[<%=pageCount %>] 
                                     <a href="javascript: jump2page(1)" title="首页">&laquo; 首页</a>
@@ -253,42 +315,39 @@
                             if (isEmpty) {
                         %>
                         <tr>
-                            <td colspan="9">
+                            <td colspan="8">
                             	没找到内容
                             </td>
                         </tr>
                         <%
                         } else {//非空
-                            for(int i=0;i<urlFilterList.size();i++)
+                            for(int i=0;i<domainFilterList.size();i++)
                             { 
                         %>
                         <tr>
                             <td>
-                                <%=urlFilterList.get(i).getId() %>
+                                <%=domainFilterList.get(i).getId() %>
                             </td>
                             <td>
-                                <%=urlFilterList.get(i).getWebsite() %>
+                                <%=domainFilterList.get(i).getWebsite() %>
                             </td>
                             <td>
-                                <%=urlFilterList.get(i).getTypeDesc() %>
+                                <%=domainFilterList.get(i).getTypeDesc() %>
                             </td>
                             <td>
-                                <%=urlFilterList.get(i).getFilterTypeDesc() %>
+                                <%=domainFilterList.get(i).getDomain() %>
                             </td>
                             <td>
-                                <%=urlFilterList.get(i).getFilterUrlPart() %>
+                                <%=domainFilterList.get(i).getRemark() %>
                             </td>
                             <td>
-                                <%=urlFilterList.get(i).getRemark() %>
+                                <%=domainFilterList.get(i).getCreateDate() %>
                             </td>
                             <td>
-                                <%=urlFilterList.get(i).getCreateDate() %>
+                                <%=domainFilterList.get(i).getCreateTime() %>
                             </td>
                             <td>
-                                <%=urlFilterList.get(i).getCreateTime() %>
-                            </td>
-                            <td>
-                            	<input class="button" type="button" onclick="deleteUrlFilter(<%=urlFilterList.get(i).getId() %>);" value="删除" />
+                            	<input class="button" type="button" onclick="deleteDomainFilter(<%=domainFilterList.get(i).getId() %>);" value="删除" />
                             </td>
                         </tr>
                         <%

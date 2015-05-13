@@ -27,7 +27,9 @@ import com.opensymphony.xwork2.ActionSupport;
  * @datetime 14-3-29 12:44
  */
 public class BaseAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 日志处理器
      */
     Logger logger = Logger.getLogger(BaseAction.class);

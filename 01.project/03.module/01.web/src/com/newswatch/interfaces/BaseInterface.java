@@ -49,6 +49,10 @@ public interface BaseInterface {
      */
     public static final String URL_FILTER_PAGE_SIZE = "url_filter_page_size";
     /**
+     * 域名过滤页面大小
+     */
+    public static final String DOMAIN_FILTER_PAGE_SIZE = "domain_filter_page_size";
+    /**
      * 图片验证码
      */
     public static final String SESSION_SECURITY_CODE = "session_security_code";

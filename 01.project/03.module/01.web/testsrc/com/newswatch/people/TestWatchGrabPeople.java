@@ -46,6 +46,8 @@ public class TestWatchGrabPeople {
 			if(gap > 60){
 				System.out.println("程序停滞1分钟，发送邮件提醒！");
 				EmailUtils.sendEmail("抓取停止", "程序抓取于时间:[" + news.getUpdateDate() + " " + news.getUpdateTime() + "]停止！", "419066357@qq.com");
+				//启动一个新线程
+				new Thread(new TestGrabPeopleThread()).start();
 			}
 			Thread.sleep(20000);
 		}

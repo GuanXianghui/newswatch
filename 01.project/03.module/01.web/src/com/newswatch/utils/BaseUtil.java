@@ -1,9 +1,14 @@
 package com.newswatch.utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.newswatch.dao.NewsDao;
 import com.newswatch.interfaces.BaseInterface;
 import com.newswatch.interfaces.SymbolInterface;
 
@@ -38,5 +43,53 @@ public class BaseUtil implements BaseInterface, SymbolInterface {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * 根据网站查询库里所有域名
+     * @param website
+     * @return
+     * @throws Exception
+     */
+    public static List<String> queryAllDomainByWebsite(String website) throws Exception {
+    	List<String> urlList = NewsDao.queryAllUrlByWebsite(website);
+		List<String> domainList = new ArrayList<String>();
+		for(String url : urlList){
+			String httpPref = "http://";
+			if(url.startsWith(httpPref)){
+				url = url.substring(httpPref.length());
+				int index = url.indexOf("/");
+				if(index > 0){
+					url = url.substring(0, index);
+				}
+				url = httpPref + url;
+				if(!domainList.contains(url)){
+					domainList.add(url);
+				}
+				continue;
+			}
+			String httpsPref = "https://";
+			if(url.startsWith(httpsPref)){
+				url = url.substring(httpsPref.length());
+				int index = url.indexOf("/");
+				if(index > 0){
+					url = url.substring(0, index);
+				}
+				url = httpsPref + url;
+				if(!domainList.contains(url)){
+					domainList.add(url);
+				}
+				continue;
+			}
+			int index = url.indexOf("/");
+			if(index > 0){
+				url = url.substring(0, index);
+			}
+			if(!domainList.contains(url)){
+				domainList.add(url);
+			}
+		}
+		Collections.sort(domainList);
+		return domainList;
     }
 }

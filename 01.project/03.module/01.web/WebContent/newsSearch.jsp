@@ -140,6 +140,7 @@
                         <tr>
                             <td colspan="5">
                                 <div class="pagination">
+                                	总数:[<%=count %>] 总页数:[<%=pageCount %>] 
                                     <a href="javascript: jump2page(1)" title="首页">&laquo; 首页</a>
                                     <%
                                         if(pageNum > 1){

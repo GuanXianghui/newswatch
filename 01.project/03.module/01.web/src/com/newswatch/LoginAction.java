@@ -14,7 +14,8 @@ import com.newswatch.interfaces.UserInterface;
  * @datetime 14-5-10 19:20
  */
 public class LoginAction extends BaseAction implements UserInterface{
-    private String name;
+	private static final long serialVersionUID = 1L;
+	private String name;
     private String password;
     private String jumpUrl;
 

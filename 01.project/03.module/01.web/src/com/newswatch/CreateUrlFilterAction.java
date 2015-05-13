@@ -16,7 +16,8 @@ import com.newswatch.utils.TokenUtil;
  * @datetime 14-5-10 19:20
  */
 public class CreateUrlFilterAction extends BaseAction implements UserInterface{
-    private String website;
+	private static final long serialVersionUID = 1L;
+	private String website;
     private String type;
     private String filterType;
     private String filterUrlPart;

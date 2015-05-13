@@ -31,6 +31,12 @@
         </action>
         <action name="deleteUrlFilter" class="com.newswatch.DeleteUrlFilterAction">
         </action>
+        <action name="refreshNeedConfigDomain" class="com.newswatch.RefreshNeedConfigDomainAction">
+        </action>
+        <action name="createDomainFilter" class="com.newswatch.CreateDomainFilterAction">
+        </action>
+        <action name="deleteDomainFilter" class="com.newswatch.DeleteDomainFilterAction">
+        </action>
     </package>
 
     <!--

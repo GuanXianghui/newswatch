@@ -140,14 +140,14 @@ public class NewsDao {
     }
 
     /**
-     * 查询所有地址
+     * 根据网站查询所有地址
      *
      * @return
      * @throws Exception
      */
-    public static List<String> queryAllUrl() throws Exception {
+    public static List<String> queryAllUrlByWebsite(String website) throws Exception {
     	List<String> urlList = new ArrayList<String>();
-        String sql = "SELECT url FROM news";
+        String sql = "SELECT url FROM news where website='" + website + "'";
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
         ResultSet rs = DB.executeQuery(c, stmt, sql);
@@ -175,7 +175,7 @@ public class NewsDao {
      */
     public static News getLastGrabUrlReturnNews() throws Exception {
         String sql = "SELECT id,website,url,state,times,title,content,create_date,create_time,update_date,update_time"
-        		+ " FROM news where state > 1 order by id desc limit 1";
+        		+ " FROM news where state > 1 order by update_date desc, update_time desc limit 1";
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
         ResultSet rs = DB.executeQuery(c, stmt, sql);

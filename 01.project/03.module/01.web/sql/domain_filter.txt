@@ -1,0 +1,12 @@
+create table domain_filter( #域名过滤表
+  	id int auto_increment primary key comment '主键 自增',
+  	website varchar(50) not null comment '网站名称 不为空',
+  	type int not null comment '类型 不为空 类型:1 白名单 2 黑名单',
+  	domain varchar(100) not null comment '模糊过滤网址 不为空',
+  	remark varchar(500) comment '备注',
+  	state int not null comment '状态 不为空 状态:1 正常 2 删除',
+  	create_date varchar(8) not null comment '创建日期 不为空',
+  	create_time varchar(6) not null comment '创建时间 不为空',
+  	update_date varchar(8) comment '修改日期',
+  	update_time varchar(6) comment '修改时间'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,6 +39,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,6 +48,31 @@ public class HttpClientUtils {
 
 	private static final Log logger = LogFactory.getLog(HttpClientUtils.class);
 
+    /**
+     * UTF-8
+     */
+    public static final String ENCODE_UTF8 = "UTF-8";
+
+    /**
+     * UTF-8
+     */
+    public static final String ENCODE_UTF16 = "UTF-16";
+
+    /**
+     * UTF-8
+     */
+    public static final String ENCODE_GB2312 = "GB2312";
+
+    /**
+     * GBK
+     */
+    public static final String ENCODE_GBK = "GBK";
+
+    /**
+     * GBK
+     */
+    public static final String ENCODE_ISO = "ISO-8859-1";
+
 	/**
 	 * 获得网页中的所有HTML内容
 	 * 
@@ -53,11 +80,13 @@ public class HttpClientUtils {
 	 * @param charset
 	 * @return
 	 */
-	public static String getWebContentByGet(String url, String charset) {
+	public static String getWebContentByGet(String url, String charset) throws Exception {
 		HttpClient client = new HttpClient();
 		GetMethod getMethod = new GetMethod(url);
 		StringBuilder sb = new StringBuilder();
 		try {
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);  
+			client.getHttpConnectionManager().getParams().setSoTimeout(10000); 
 			getMethod.setRequestHeader("Connection", "close");
 			getMethod.getParams().setBooleanParameter(
 					"http.protocol.expect-continue", false);
@@ -75,6 +104,7 @@ public class HttpClientUtils {
 			}
 		} catch (Exception e) {
 			logger.error(e);
+			throw e;
 		} finally {
 			if (getMethod != null)
 				getMethod.releaseConnection();
@@ -85,7 +115,7 @@ public class HttpClientUtils {
 		return sb.toString();
 	}
 
-	public static String getWebContentByGet(String url) {
+	public static String getWebContentByGet(String url) throws Exception {
 		return getWebContentByGet(url, "utf-8");
 	}
 
@@ -168,6 +198,80 @@ public class HttpClientUtils {
 		}
 		return sb.toString();
 	}
+	
+	public static String postMap(String url, Map<String, String> map, String requestEncode, String responseEncode) throws Exception
+    {
+        PostMethod method = new PostMethod(url);
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext())
+        {
+            String key = (String)iterator.next();
+            String value = map.get(key);
+            if(StringUtils.isNotBlank(value))
+            {
+            	method.addParameter(key, value); 
+            }
+        }
+        method.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET,requestEncode);
+        return connect(method, responseEncode);
+    }
+	
+	/**
+     * 与服务器通讯
+     * @param method
+     * @param responseEncode
+     * @return
+     * @throws Exception
+     */
+    public static String connect(PostMethod method, String responseEncode) throws Exception
+    {
+        InputStream is = null;
+        BufferedReader br = null;
+        try
+        {
+            HttpClient client = new HttpClient();
+            int returnCode = client.executeMethod(method);
+
+            if (HttpURLConnection.HTTP_OK != returnCode)
+            {
+                logger.error("与服务器交互发生异常,returnCode=" + returnCode);
+            }
+            is = method.getResponseBodyAsStream();
+            br = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(), responseEncode));
+            StringBuffer response = new StringBuffer();
+            String readLine;
+            while (((readLine = br.readLine()) != null))
+            {
+                response.append(readLine);
+            }
+            //logger.info("response.toString=====>" + response.toString());
+            return response.toString();
+        } catch (Exception e)
+        {
+            logger.error("与服务器交互发生异常~", e);
+            throw new RuntimeException("与服务器交互发生异常~", e);
+        } finally
+        {
+            try
+            {
+                if (null != method)
+                {
+                    method.releaseConnection();
+                }
+                if (null != is)
+                {
+                    is.close();
+                }
+                if (null != br)
+                {
+                    br.close();
+                }
+            } catch (Exception e)
+            {
+                logger.error("与服务器交互发生异常~", e);
+            }
+        }
+    }
 
 	public static void main(String[] str) {
 		Map<String, String> map = new HashMap<String, String>();
@@ -189,6 +293,5 @@ public class HttpClientUtils {
 				"http://116.236.252.101:20153/FundTxInteract/FSIRequestReceiver",
 				map, "UTF-8");
 		System.out.println(content);
-		
 	}
 }

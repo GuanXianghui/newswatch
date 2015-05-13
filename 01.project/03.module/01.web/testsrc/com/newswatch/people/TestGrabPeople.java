@@ -32,8 +32,11 @@ import com.newswatch.utils.HttpClientUtils;
  */
 public class TestGrabPeople {
 	public List<String> urlList = new ArrayList<String>();
+	public List<UrlFilter> whiteList = new ArrayList<UrlFilter>();
+	public List<UrlFilter> blackList = new ArrayList<UrlFilter>();
 	public static final String PEOPLE_WEBSITE = "人民网";
 	public static final String PEOPLE_URL = "http://www.people.com.cn";
+	
 	
 	/**
 	 * 处理方法
@@ -150,10 +153,15 @@ public class TestGrabPeople {
 	public void addUrl(List<String> list, String url) throws Exception {
 		url = StringUtils.trim(url);
 		/**
+		 * 判已存在
+		 */
+		url = url.replaceAll("'", "\"");
+		if(urlList.indexOf(url) > -1){
+			return;
+		}
+		/**
 		 * 过滤白名单
 		 */
-		List<UrlFilter> whiteList = UrlFilterDao.
-				queryUrlFilterByWebsiteAndType(PEOPLE_WEBSITE, UrlFilter.TYPE_WHITE);
 		for(UrlFilter urlFilter : whiteList){
 			if(UrlFilter.FILTER_TYPE_START_WITH == urlFilter.getFilterType()){
 				if(!url.startsWith(urlFilter.getFilterUrlPart())){
@@ -174,8 +182,6 @@ public class TestGrabPeople {
 		/**
 		 * 过滤黑名单
 		 */
-		List<UrlFilter> blackList = UrlFilterDao.
-				queryUrlFilterByWebsiteAndType(PEOPLE_WEBSITE, UrlFilter.TYPE_BLACK);
 		for(UrlFilter urlFilter : blackList){
 			if(UrlFilter.FILTER_TYPE_START_WITH == urlFilter.getFilterType()){
 				if(url.startsWith(urlFilter.getFilterUrlPart())){
@@ -192,13 +198,6 @@ public class TestGrabPeople {
 					return;
 				}
 			}
-		}
-		/**
-		 * 判已存在
-		 */
-		url = url.replaceAll("'", "\"");
-		if(urlList.indexOf(url) > -1){
-			return;
 		}
 		list.add(url);
 		urlList.add(url);
@@ -219,8 +218,22 @@ public class TestGrabPeople {
 	 * @throws Exception
 	 */
 	public void initUrlList() throws Exception {
-		this.urlList = NewsDao.queryAllUrl();
-		System.out.println("库中所有的URL大小:" + urlList.size());
+		this.urlList = NewsDao.queryAllUrlByWebsite(PEOPLE_WEBSITE);
+		System.out.println("库中所有人民网的URL大小:" + urlList.size());
+	}
+	
+	/**
+	 * 初始化黑白名单
+	 * @throws Exception
+	 */
+	public void initWhiteBlackList() throws Exception {
+		/**
+		 * 过滤白名单
+		 */
+		whiteList = UrlFilterDao.
+				queryUrlFilterByWebsiteAndType(PEOPLE_WEBSITE, UrlFilter.TYPE_WHITE);
+		blackList = UrlFilterDao.
+				queryUrlFilterByWebsiteAndType(PEOPLE_WEBSITE, UrlFilter.TYPE_BLACK);
 	}
 	
 	/**
@@ -228,14 +241,6 @@ public class TestGrabPeople {
 	 * @param params
 	 */
 	public static void main(String[] params) throws Exception {
-		TestGrabPeople testGrabPeople = new TestGrabPeople();
-		//testGrabPeople.firstInit();
-		testGrabPeople.initUrlList();
-		News news = NewsDao.getNextGrabNews();
-		while(news != null){
-			testGrabPeople.process(news.getUrl());
-			news = NewsDao.getNextGrabNews();
-		}
-		System.out.println(DateUtils.getCurrentGBKDateTime() + ":全部采集结束！");
+		new Thread(new TestGrabPeopleThread()).start();
 	}
 }
