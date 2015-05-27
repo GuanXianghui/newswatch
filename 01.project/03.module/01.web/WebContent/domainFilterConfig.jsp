@@ -166,6 +166,7 @@
                     <table id="cwr_table0" style="display: none;">
                         <thead>
                         <tr>
+                            <th>序号</th>
                             <th>网站名称</th>
                             <th>域名</th>
                             <th>备注</th>

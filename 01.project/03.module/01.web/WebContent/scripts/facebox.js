@@ -77,7 +77,7 @@
 
   $.extend($.facebox, {
     settings: {
-      opacity      : 0,
+      opacity      : 0.1,
       overlay      : true,
       loadingImage : 'images/loading.gif',
       closeImage   : 'images/closelabel.gif',
@@ -93,13 +93,13 @@
             <tr> \
               <td class="b"/> \
               <td class="body"> \
-                <div class="content"> \
-                </div> \
                 <div class="footer"> \
                   <a href="#" class="close"> \
                     <img src="images/closelabel.gif" title="close" class="close_image" /> \
                   </a> \
                 </div> \
+	          <div class="content"> \
+	          </div> \
               </td> \
               <td class="b"/> \
             </tr> \
@@ -288,6 +288,8 @@
       .css('opacity', $.facebox.settings.opacity)
       .click(function() { $(document).trigger('close.facebox') })
       .fadeIn(200)
+      
+    $('#facebox .footer').css("opacity", "1");
     return false
   }
 

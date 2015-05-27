@@ -6,6 +6,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.newswatch.entities.News;
 import com.newswatch.entities.UrlFilter;
 
@@ -38,7 +40,7 @@ public class NewsDao {
      * @throws Exception
      */
     public static News getNewsByUrl(String url) throws Exception {
-        String sql = "SELECT id,website,url,state,times,title,content,create_date,create_time,update_date,update_time FROM news " +
+        String sql = "SELECT id,website,url,state,times,title,date,time,author,source,content,create_date,create_time,update_date,update_time FROM news " +
                 "WHERE url='" + url + "'";
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
@@ -53,12 +55,16 @@ public class NewsDao {
                 int state = rs.getInt("state");
                 int times = rs.getInt("times");
                 String title = rs.getString("title");
+                String date = rs.getString("date");
+                String time = rs.getString("time");
+                String author = rs.getString("author");
+                String source = rs.getString("source");
                 String content = rs.getString("content");
                 String createDate = rs.getString("create_date");
                 String createTime = rs.getString("create_time");
                 String updateDate = rs.getString("update_date");
                 String updateTime = rs.getString("update_time");
-                News news = new News(id, website, url, state, times, title, content, createDate, createTime, updateDate, updateTime);
+                News news = new News(id, website, url, state, times, title, date, time, author, source, content, createDate, createTime, updateDate, updateTime);
                 return news;
             }
             return null;
@@ -77,12 +83,23 @@ public class NewsDao {
      */
     public static void insertNews(News news) throws Exception {
         String sql = "insert into news" +
-                "(id,website,url,state,times,title,content,create_date,create_time,update_date,update_time)" +
+                "(id,website,url,state,times,title,date,time,author,source,content,create_date,create_time,update_date,update_time)" +
                 "values" +
                 "(null,'" + news.getWebsite() + "','" + news.getUrl() + "'," + news.getState() + "," +
-                news.getTimes() + ",'" + news.getTitle() + "','" + news.getContent() + "','" + 
+                news.getTimes() + ",'" + news.getTitle() + "','" + news.getDate() + "','" + news.getTime() + "','" + news.getAuthor() + "','" + news.getSource() + "','" + news.getContent() + "','" + 
                 news.getCreateDate() + "','" + news.getCreateTime() + "','" + news.getUpdateDate() + "','" + 
                 news.getUpdateTime() + "')";
+        DB.executeUpdate(sql);
+    }
+
+    /**
+     * 更新新闻状态
+     *
+     * @param news
+     * @throws Exception
+     */
+    public static void updateNewsStateByUrl(News news) throws Exception {
+        String sql = "update news set state=" + news.getState() + " where url='" + news.getUrl() + "'";
         DB.executeUpdate(sql);
     }
 
@@ -94,7 +111,7 @@ public class NewsDao {
      */
     public static void updateNewsByUrl(News news) throws Exception {
         String sql = "update news set state=" + news.getState() + ", times=" + news.getTimes() + ", title='" + 
-	    news.getTitle() + "', content='" + news.getContent() + "', update_date='" + news.getUpdateDate() + 
+	    news.getTitle() + "', date='" + news.getDate() + "', time='" + news.getTime() + "', author='" + news.getAuthor() + "', source='" + news.getSource() + "', content='" + news.getContent() + "', update_date='" + news.getUpdateDate() + 
 	    "', update_time='" + news.getUpdateTime() + "' where url='" + news.getUrl() + "'";
         DB.executeUpdate(sql);
     }
@@ -107,7 +124,7 @@ public class NewsDao {
      * @throws Exception
      */
     public static News getNextGrabNews() throws Exception {
-        String sql = "SELECT id,website,url,state,times,title,content,create_date,create_time,update_date,update_time FROM news " +
+        String sql = "SELECT id,website,url,state,times,title,date,time,author,source,content,create_date,create_time,update_date,update_time FROM news " +
                 "WHERE state in (1,3) ORDER BY state,id limit 1";
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
@@ -123,12 +140,16 @@ public class NewsDao {
                 int state = rs.getInt("state");
                 int times = rs.getInt("times");
                 String title = rs.getString("title");
+                String date = rs.getString("date");
+                String time = rs.getString("time");
+                String author = rs.getString("author");
+                String source = rs.getString("source");
                 String content = rs.getString("content");
                 String createDate = rs.getString("create_date");
                 String createTime = rs.getString("create_time");
                 String updateDate = rs.getString("update_date");
                 String updateTime = rs.getString("update_time");
-                News news = new News(id, website, url, state, times, title, content, createDate, createTime, updateDate, updateTime);
+                News news = new News(id, website, url, state, times, title, date, time, author, source, content, createDate, createTime, updateDate, updateTime);
                 return news;
             }
             return null;
@@ -174,7 +195,7 @@ public class NewsDao {
      * @throws Exception
      */
     public static News getLastGrabUrlReturnNews() throws Exception {
-        String sql = "SELECT id,website,url,state,times,title,content,create_date,create_time,update_date,update_time"
+        String sql = "SELECT id,website,url,state,times,title,date,time,author,source,content,create_date,create_time,update_date,update_time"
         		+ " FROM news where state > 1 order by update_date desc, update_time desc limit 1";
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
@@ -190,12 +211,16 @@ public class NewsDao {
                 int state = rs.getInt("state");
                 int times = rs.getInt("times");
                 String title = rs.getString("title");
+                String date = rs.getString("date");
+                String time = rs.getString("time");
+                String author = rs.getString("author");
+                String source = rs.getString("source");
                 String content = rs.getString("content");
                 String createDate = rs.getString("create_date");
                 String createTime = rs.getString("create_time");
                 String updateDate = rs.getString("update_date");
                 String updateTime = rs.getString("update_time");
-                News news = new News(id, website, url, state, times, title, content, createDate, createTime, updateDate, updateTime);
+                News news = new News(id, website, url, state, times, title, date, time, author, source, content, createDate, createTime, updateDate, updateTime);
                 return news;
             }
             return null;
@@ -292,5 +317,88 @@ public class NewsDao {
         	sql += " like '%" + url + "'";
         }
         DB.executeUpdate(sql);
+    }
+
+    /**
+     * 查询需要配置抓取方案的新闻
+     *
+     * @return
+     * @throws Exception
+     */
+    public static List<News> queryNeedFetchPlanNews(String website) throws Exception {
+    	List<News> newsList = new ArrayList<News>();
+    	String sql = "SELECT id,website,url,state,times,title,date,time,author,source,content,create_date,create_time,update_date,update_time"
+        		+ " FROM news where website='" + website + "' and state=2 and id not in ( "
+        		+ " SELECT distinct n.id"
+        		+ " FROM news n, fetch_plan f"
+        		+ " where n.website='" + website + "' and f.website='" + website + "'"
+				+ " and n.state=2 and f.state=1 and n.url like f.like_url"
+				+ " and (f.not_like_url is null or TRIM(f.not_like_url) = '' or n.url not like f.not_like_url)"
+        		+ " ) order by url limit 0, 50";
+        Connection c = DB.getConn();
+        Statement stmt = DB.createStatement(c);
+        ResultSet rs = DB.executeQuery(c, stmt, sql);
+        try {
+            if (rs == null) {
+                throw new RuntimeException("数据库操作出错，请重试！");
+            }
+            while (rs.next()) {
+            	int id = rs.getInt("id");
+                String url = rs.getString("url");
+                int state = rs.getInt("state");
+                int times = rs.getInt("times");
+                String title = rs.getString("title");
+                String date = rs.getString("date");
+                String time = rs.getString("time");
+                String author = rs.getString("author");
+                String source = rs.getString("source");
+                String content = rs.getString("content");
+                String createDate = rs.getString("create_date");
+                String createTime = rs.getString("create_time");
+                String updateDate = rs.getString("update_date");
+                String updateTime = rs.getString("update_time");
+                News news = new News(id, website, url, state, times, title, date, time, author, source, content, createDate, createTime, updateDate, updateTime);
+                newsList.add(news);
+            }
+            return newsList;
+        } finally {
+            DB.close(rs);
+            DB.close(stmt);
+            DB.close(c);
+        }
+    }
+
+    /**
+     * 根据网站名称，模糊网址和不包括模糊网址
+     * @param website
+     * @param likeUrl
+     * @param notLikeUrl
+     * @return
+     * @throws Exception
+     */
+    public static List<String> queryNewsByWebsiteAndLikeAndNotLike(String website, String likeUrl, String notLikeUrl) throws Exception {
+        List<String> urlList = new ArrayList<String>();
+    	String sql = "SELECT id,website,url,state,times,title,date,time,author,source,content,create_date,create_time,update_date,update_time FROM news " +
+                "WHERE state=" + News.STATE_GRAB_URL_SUCCESS
+                + " AND website='" + website + "'"
+                + " AND url like '" + likeUrl + "'"
+                + (StringUtils.isBlank(notLikeUrl)?"":" AND url not like '" + notLikeUrl + "'")
+                + " ORDER BY url";
+        Connection c = DB.getConn();
+        Statement stmt = DB.createStatement(c);
+        ResultSet rs = DB.executeQuery(c, stmt, sql);
+        try {
+            if (rs == null) {
+                throw new RuntimeException("数据库操作出错，请重试！");
+            }
+            while (rs.next()) {
+            	urlList.add(rs.getString("url"));
+            }
+            return urlList;
+        } finally {
+            DB.close(rs);
+            DB.close(stmt);
+            DB.close(c);
+        }
     }
 }

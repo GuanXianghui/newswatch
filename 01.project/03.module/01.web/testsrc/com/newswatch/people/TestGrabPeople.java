@@ -81,6 +81,7 @@ public class TestGrabPeople {
 		
 		for(String tempUrl : tempList){
 			news = new News(PEOPLE_WEBSITE, tempUrl, News.STATE_INIT, 0, StringUtils.EMPTY, 
+					StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, 
 					StringUtils.EMPTY, DateUtils.getCurrentDate(), DateUtils.getCurrentTime(), 
 					StringUtils.EMPTY, StringUtils.EMPTY);
 			NewsDao.insertNews(news);
@@ -208,6 +209,7 @@ public class TestGrabPeople {
 	 */
 	public void firstInit() throws Exception {
 		News news = new News(PEOPLE_WEBSITE, PEOPLE_URL, News.STATE_INIT, 0, StringUtils.EMPTY, 
+				StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, 
 				StringUtils.EMPTY, DateUtils.getCurrentDate(), DateUtils.getCurrentTime(), 
 				StringUtils.EMPTY, StringUtils.EMPTY);
 		NewsDao.insertNews(news);

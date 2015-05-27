@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<project name="newswatch" default="all" basedir=".">
+    <!--定义版本 -->
+    <property name="version" value="1.0.0"/>
+    <!--定义核心源代码目录-->
+    <property name="core_src" value="./src"/>
+    <!--定义核心测试源代码目录-->
+    <property name="core_test_src" value="./testsrc"/>
+    <!--定义工具源代码目录-->
+    <property name="core_web" value="./WebContent"/>
+    <!--定义编译目标目录-->
+    <property name="targetDir" value="../../01.building/"/>
+    <!--定义lib根目录-->
+    <property name="libDir" value="../../02.lib"/>
+    <!--定义临时文件 -->
+    <property name="tempDir" value="${targetDir}/temp"/>
+    <tstamp>
+        <format pattern="yyyyMMdd" property="currentdate"/>
+    </tstamp>
+
+    <!--定义编译器依赖-->
+    <patternset id="compiler.resources">
+        <include name="**/?*.java"/>
+    </patternset>
+
+    <patternset id="copy.resources">
+        <include name="**/?*.xml"/>
+        <include name="**/?*.properties"/>
+    </patternset>
+
+    <patternset id="copy.web.resources">
+        <include name="**/?*.jsp"/>
+        <include name="**/?*.css"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.db"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.js"/>
+        <include name="**/?*.swf"/>
+        <include name="**/?*.txt"/>
+        <include name="**/?*.jar"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.properties"/>
+        <include name="**/?*.tld"/>
+    </patternset>
+
+    <!-- 定义编译的依赖库 -->
+    <path id="apache_lib">
+        <fileset dir="${libDir}/apache">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="javamail_lib">
+        <fileset dir="${libDir}/javamail">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="json_lib">
+        <fileset dir="${libDir}/json">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="log4j_lib">
+        <fileset dir="${libDir}/log4j">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="mysql_lib">
+        <fileset dir="${libDir}/mysql">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="poi_lib">
+        <fileset dir="${libDir}/poi">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="qr_lib">
+        <fileset dir="${libDir}/qr">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="servlet_lib">
+        <fileset dir="${libDir}/servlet">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="struts2_lib">
+        <fileset dir="${libDir}/struts2_lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="ueditor_lib">
+        <fileset dir="${libDir}/ueditor">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!--定义准备任务-->
+    <target name="prepare" depends="clear">
+        <!-- 创建临时文件夹 -->
+        <mkdir dir="${tempDir}"/>
+        <!-- 拷贝web目录下的所有东西到 tempDir上 因为不需要编译 -->
+        <copy todir="${tempDir}">
+            <fileset dir="${core_web}">
+                <patternset refid="copy.web.resources"/>
+            </fileset>
+        </copy>
+        <!-- 创建classes文件夹 -->
+        <mkdir dir="${tempDir}/WEB-INF/classes"/>
+        <!-- 创建lib文件夹 -->
+        <mkdir dir="${tempDir}/WEB-INF/lib"/>
+    </target>
+
+    <!--构建核心部分-->
+    <target name="buildWeb" depends="prepare">
+        <!-- 编译src文件下java文件，jdk1.6 -->
+        <javac debug="on" nowarn="yes" source="1.6" target="1.6" srcdir="${core_src}"
+               destdir="${tempDir}/WEB-INF/classes">
+            <classpath refid="apache_lib"/>
+            <classpath refid="javamail_lib"/>
+            <classpath refid="json_lib"/>
+            <classpath refid="log4j_lib"/>
+            <classpath refid="mysql_lib"/>
+            <classpath refid="poi_lib"/>
+            <classpath refid="servlet_lib"/>
+            <classpath refid="struts2_lib"/>
+            <patternset refid="compiler.resources"/>
+        </javac>
+        <javac debug="on" nowarn="yes" source="1.6" target="1.6" srcdir="${core_test_src}"
+               destdir="${tempDir}/WEB-INF/classes">
+            <classpath refid="apache_lib"/>
+            <classpath refid="javamail_lib"/>
+            <classpath refid="json_lib"/>
+            <classpath refid="log4j_lib"/>
+            <classpath refid="mysql_lib"/>
+            <classpath refid="poi_lib"/>
+            <classpath refid="servlet_lib"/>
+            <classpath refid="struts2_lib"/>
+            <patternset refid="compiler.resources"/>
+        </javac>
+        <!-- 编译src出来的文件，打成jar包，放到lib下 -->
+        <jar basedir="${tempDir}/WEB-INF/classes" jarfile="${tempDir}/WEB-INF/lib/newswatch_${version}_src.jar">
+            <manifest>
+                <attribute name="Built-By" value="Xianghui.Guan with ANT"/>
+                <attribute name="Implementation-Vendor" value="newswatch"/>
+                <attribute name="Implementation-Title" value="newswatch"/>
+                <attribute name="Implementation-Version" value="${version}_${currentdate}"/>
+            </manifest>
+        </jar>
+        <!-- 删掉编译出来的文件 -->
+        <delete dir="${tempDir}/WEB-INF/classes"/>
+        <!-- 创建classes文件夹 -->
+        <mkdir dir="${tempDir}/WEB-INF/classes"/>
+        <!-- properties文件转asiii码 -->
+        <native2ascii src="${core_src}" dest="${tempDir}/WEB-INF/classes" includes="**/?*.properties"/>
+        <!-- 拷贝非java和非properties文件到classes文件下 -->
+        <copy todir="${tempDir}/WEB-INF/classes">
+            <fileset dir="${core_src}">
+                <patternset refid="copy.resources"/>
+            </fileset>
+        </copy>
+        <!-- 拷贝所有jar包到lib下 -->
+        <copy todir="${tempDir}/WEB-INF/lib">
+	        <fileset dir="${libDir}/apache">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/javamail">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/json">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/log4j">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/mysql">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/poi">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/struts2_lib">
+	            <include name="*.jar"/>
+	        </fileset>
+        </copy>
+        <!-- 打成war包 -->
+        <war warfile="${targetDir}/newswatch.war" webxml="${tempDir}/WEB-INF/web.xml">
+            <fileset dir="${tempDir}"/>
+        </war>
+    </target>
+
+    <!--定义全部处理-->
+    <target name="all" depends="buildWeb">
+        <antcall target="clear"/>
+    </target>
+
+    <!--定义清理任务-->
+    <target name="clear">
+        <delete dir="${tempDir}"/>
+    </target>
+</project>

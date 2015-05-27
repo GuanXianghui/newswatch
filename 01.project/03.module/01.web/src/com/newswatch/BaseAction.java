@@ -2,11 +2,15 @@ package com.newswatch;
 
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -61,6 +65,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
      */
     HttpServletRequest request;
     HttpServletResponse response;
+    
+    /**
+     * 返回json
+     */
+    Map<String, Object> json = new HashMap<String, Object>(); 
 
     /**
      * 构造函数
@@ -122,6 +131,14 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
         writer.flush();
         writer.close();
     }
+    
+    /**
+     * ajax写出json
+     * @throws Exception
+     */
+    public void writeJson() throws Exception {
+    	write(JSONObject.fromObject(json).toString());
+    }
 
     /**
      * 判图片验证码是否正确
@@ -163,4 +180,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
     public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
     }
+
+	public Map<String, Object> getJson() {
+		return json;
+	}
+
+	public void setJson(Map<String, Object> json) {
+		this.json = json;
+	}
 }

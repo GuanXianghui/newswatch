@@ -37,6 +37,16 @@
         </action>
         <action name="deleteDomainFilter" class="com.newswatch.DeleteDomainFilterAction">
         </action>
+        <action name="refreshNeedFetchPlanNews" class="com.newswatch.RefreshNeedFetchPlanNewsAction">
+        </action>
+        <action name="setOnlyDisplay" class="com.newswatch.SetOnlyDisplayAction">
+        </action>
+        <action name="testFetchPlanQueryUrl" class="com.newswatch.TestFetchPlanQueryUrlAction">
+        </action>
+        <action name="testFetchPlan" class="com.newswatch.TestFetchPlanAction">
+        </action>
+        <action name="saveFetchPlan" class="com.newswatch.SaveFetchPlanAction">
+        </action>
     </package>
 
     <!--

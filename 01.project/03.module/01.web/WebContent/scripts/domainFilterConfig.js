@@ -94,7 +94,8 @@ function refreshNeedConfigDomain(){
                 	showSuccessMessage("message_id_0", data["message"]);
                 	var html = EMPTY;
                 	for(var i=0;i<data["tenDomains"].length;i++){
-                		html += "<tr id=\"config_tr_" + (++remarkCount) + "\"><td>" + $("#website0").val() + 
+                		html += "<tr id=\"config_tr_" + (++remarkCount) + "\"><td>" + (i+1) + 
+                		"</td><td>" + $("#website0").val() + 
                 		"</td><td><a id=\"config_a_" + (remarkCount) + "\" href='" + data["tenDomains"][i] + "' target='_blank' onclick=\"$(this).css('color', 'blue')\">" + data["tenDomains"][i] + "</a>" +
                 		"</td><td><input type=\"text\" class=\"text-input large-input\" id=\"config_remark_" + (remarkCount) + "\">" + 
                 		"</td><td>" + 

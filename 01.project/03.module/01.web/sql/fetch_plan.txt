@@ -1,0 +1,23 @@
+create table fetch_plan( #内容抓取方案表
+  	id int auto_increment primary key comment '主键 自增',
+  	website varchar(50) not null comment '网站名称 不为空',
+  	like_url varchar(500) not null comment '模糊网址 不为空',
+  	not_like_url varchar(500) comment '不包括模糊网址 可为空',
+  	state int not null comment '状态 不为空 状态:1 正常 2 删除',
+  	order_index varchar(10) not null comment '采集顺序  不为空 1抬头，2时间，3来源，4作者，5内容，比如：12345，125',
+  	title_pre varchar(200) comment '抬头前定位 可为空',
+  	title_post varchar(200) comment '抬头后定位 可为空',
+  	time_pre varchar(200) comment '时间前定位 可为空',
+  	time_post varchar(200) comment '时间后定位 可为空',
+  	source_pre varchar(200) comment '来源前定位 可为空',
+  	source_post varchar(200) comment '来源后定位 可为空',
+  	author_pre varchar(200) comment '作者前定位 可为空',
+  	author_post varchar(200) comment '作者后定位 可为空',
+  	content_pre varchar(200) comment '内容前定位 可为空',
+  	content_post varchar(200) comment '内容后定位 可为空',
+  	times int not null comment '抓取次数 不为空 默认0',
+  	create_date varchar(8) not null comment '创建日期 不为空',
+  	create_time varchar(6) not null comment '创建时间 不为空',
+  	update_date varchar(8) comment '修改日期',
+  	update_time varchar(6) comment '修改时间'
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

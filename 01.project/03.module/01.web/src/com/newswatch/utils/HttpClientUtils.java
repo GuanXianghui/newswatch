@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -273,25 +272,27 @@ public class HttpClientUtils {
         }
     }
 
-	public static void main(String[] str) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("applyrecordno", "20");
-		map.put("channel", "3");
-		map.put("format", "json");
-		map.put("function", "valuavgr/valuquery");
-		map.put("merid", "HEXUN");
-		map.put("pageno", "1");
-		map.put("sessionkey", "d131ee05ed364ee58bc2c3153fc5c59d");
-		map.put("signmode", "md5");
-		// map.put("signmsg", "ea98c3a60842276c2591fa0c42b6cd18");
-		map.put("signmsg", "f3b78bc5a7414263695e9465c100eccc");
-		map.put("state", "ALL");
-		map.put("timestamp", "20131030142244");
-		map.put("version", "V1.00");
-		String content = HttpClientUtils.getWebContentByPost(
-				//"http://172.24.16.233:7003/fundapi/restful/valuavgr/valuquery",
-				"http://116.236.252.101:20153/FundTxInteract/FSIRequestReceiver",
-				map, "UTF-8");
-		System.out.println(content);
+	public static void main(String[] str) throws Exception {
+//		Map<String, String> map = new HashMap<String, String>();
+//		map.put("applyrecordno", "20");
+//		map.put("channel", "3");
+//		map.put("format", "json");
+//		map.put("function", "valuavgr/valuquery");
+//		map.put("merid", "HEXUN");
+//		map.put("pageno", "1");
+//		map.put("sessionkey", "d131ee05ed364ee58bc2c3153fc5c59d");
+//		map.put("signmode", "md5");
+//		// map.put("signmsg", "ea98c3a60842276c2591fa0c42b6cd18");
+//		map.put("signmsg", "f3b78bc5a7414263695e9465c100eccc");
+//		map.put("state", "ALL");
+//		map.put("timestamp", "20131030142244");
+//		map.put("version", "V1.00");
+//		String content = HttpClientUtils.getWebContentByPost(
+//				//"http://172.24.16.233:7003/fundapi/restful/valuavgr/valuquery",
+//				"http://116.236.252.101:20153/FundTxInteract/FSIRequestReceiver",
+//				map, "UTF-8");
+//		System.out.println(content);
+		
+		System.out.println(HttpClientUtils.getWebContentByGet("http://119.people.com.cn/GB/15707203.html", "GBK"));
 	}
 }

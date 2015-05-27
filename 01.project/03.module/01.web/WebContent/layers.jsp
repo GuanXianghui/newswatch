@@ -9,6 +9,7 @@
         <ul>
             <li><a href="<%=baseUrl%>urlFilterConfig.jsp"<%=inLayer.equals("地址过滤配置")?" class=\"current\"":""%>>地址过滤配置</a></li>
         	<li><a href="<%=baseUrl%>domainFilterConfig.jsp"<%=inLayer.equals("域名过滤配置")?" class=\"current\"":""%>>域名过滤配置</a></li>
+        	<li><a href="<%=baseUrl%>fetchPlanConfig.jsp"<%=inLayer.equals("抓取方案配置")?" class=\"current\"":""%>>抓取方案配置</a></li>
         </ul>
     </li>
 </ul>

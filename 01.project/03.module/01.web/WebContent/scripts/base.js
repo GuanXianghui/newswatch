@@ -189,13 +189,14 @@ function showErrorMessage(messageId, message){
 
 /**
  * 字符串编码
- * 采用Ajax传递参数加号(+)和与符号(&)时候，服务端获取到的参数并不如意！
- * 解决办法：在传到服务端之前先将参数中的"+"和"&"符号都编码一下
+ * 采用Ajax传递参数加号(+)和与符号(&)和与符号(%)时候，服务端获取到的参数并不如意！
+ * 解决办法：在传到服务端之前先将参数中的"+"和"&"和"%"符号都编码一下
  * @param str
  */
 function filterStr(str){
     str = filePlus(str);
     str = fileBitAnd(str);
+    str = filePercent(str);
     return str;
 }
 
@@ -216,6 +217,16 @@ function filePlus(str){
  */
 function fileBitAnd(str){
     str = str.replace(/\&/g,"%26");
+    return str;
+}
+
+/**
+ * 编码&号
+ * @param str
+ * @return {*}
+ */
+function filePercent(str){
+    str = str.replace(/%/g, "%25")
     return str;
 }
 

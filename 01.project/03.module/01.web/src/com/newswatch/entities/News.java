@@ -26,6 +26,10 @@ public class News implements UserInterface {
     int state;
     int times;
     String title;
+    String date;
+    String time;
+    String author;
+    String source;
     String content;
     String createDate;
     String createTime;
@@ -39,19 +43,27 @@ public class News implements UserInterface {
      * @param state
      * @param times
      * @param title
+     * @param date
+     * @param time
+     * @param author
+     * @param source
      * @param content
      * @param createDate
      * @param createTime
      * @param updateDate
      * @param updateTime
      */
-    public News(String website, String url, int state, int times, String title, String content, 
+    public News(String website, String url, int state, int times, String title, String date, String time, String author, String source, String content, 
     		String createDate, String createTime, String updateDate, String updateTime) {
     	this.website = website;
         this.url = url;
         this.state = state;
         this.times = times;
         this.title = title;
+        this.date = date;
+        this.time = time;
+        this.author = author;
+        this.source = source;
         this.content = content;
         this.createDate = createDate;
         this.createTime = createTime;
@@ -66,13 +78,17 @@ public class News implements UserInterface {
      * @param state
      * @param times
      * @param title
+     * @param date
+     * @param time
+     * @param author
+     * @param source
      * @param content
      * @param createDate
      * @param createTime
      * @param updateDate
      * @param updateTime
      */
-    public News(int id, String website, String url, int state, int times, String title, String content, 
+    public News(int id, String website, String url, int state, int times, String title, String date, String time, String author, String source, String content, 
     		String createDate, String createTime, String updateDate, String updateTime) {
     	this.id = id;
     	this.website = website;
@@ -80,6 +96,10 @@ public class News implements UserInterface {
         this.state = state;
         this.times = times;
         this.title = title;
+        this.date = date;
+        this.time = time;
+        this.author = author;
+        this.source = source;
         this.content = content;
         this.createDate = createDate;
         this.createTime = createTime;
@@ -133,6 +153,38 @@ public class News implements UserInterface {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getContent() {
