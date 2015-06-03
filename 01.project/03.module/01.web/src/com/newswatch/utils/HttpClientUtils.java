@@ -131,6 +131,8 @@ public class HttpClientUtils {
 	public static String getWebContentByPost(String url,
 			Map<String, String> mapData, String charset) {
 		HttpClient client = new HttpClient();
+		client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);  
+		client.getHttpConnectionManager().getParams().setSoTimeout(10000);
 		InputStream is = null;
 		PostMethod postMethod = new PostMethod(url);
 		StringBuilder sb = new StringBuilder();
@@ -229,6 +231,8 @@ public class HttpClientUtils {
         try
         {
             HttpClient client = new HttpClient();
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);  
+			client.getHttpConnectionManager().getParams().setSoTimeout(10000);
             int returnCode = client.executeMethod(method);
 
             if (HttpURLConnection.HTTP_OK != returnCode)
@@ -293,6 +297,6 @@ public class HttpClientUtils {
 //				map, "UTF-8");
 //		System.out.println(content);
 		
-		System.out.println(HttpClientUtils.getWebContentByGet("http://119.people.com.cn/GB/15707203.html", "GBK"));
+		System.out.println(HttpClientUtils.getWebContentByGet("http://acftu.people.com.cn/GB/10179000.html", "GBK"));
 	}
 }

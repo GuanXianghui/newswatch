@@ -3,7 +3,6 @@ package com.newswatch;
 import org.apache.commons.lang.StringUtils;
 
 import com.newswatch.dao.NewsDao;
-import com.newswatch.entities.News;
 import com.newswatch.interfaces.UserInterface;
 import com.newswatch.utils.TokenUtil;
 
@@ -21,9 +20,9 @@ public class SetOnlyDisplayAction extends BaseAction implements UserInterface{
 	 */
 	private String website;
 	/**
-	 * 网址
+	 * 模糊网址
 	 */
-	private String url;
+	private String likeUrl;
 
     /**
      * 入口
@@ -32,18 +31,12 @@ public class SetOnlyDisplayAction extends BaseAction implements UserInterface{
     public String execute() throws Exception {
         logger.info("website:[" + website + "]");
         //判字段为空
-        if(StringUtils.isBlank(website) || StringUtils.isBlank(url)){
+        if(StringUtils.isBlank(website) || StringUtils.isBlank(likeUrl)){
             write(createResp(false, "操作有误，请重试！"));
             return null;
         }
-        News news = NewsDao.getNewsByUrl(url);
-        if(news == null || !StringUtils.equals(news.getWebsite(), website) || news.getState() != News.STATE_GRAB_URL_SUCCESS){
-        	write(createResp(false, "操作有误，请重试！"));
-            return null;
-        }
-        news.setState(News.STATE_ONLY_DISPLAY);
-        NewsDao.updateNewsStateByUrl(news);
-        write(createResp(true, "设置仅展示成功！"));
+        NewsDao.updateNewsOnlyDisplay(website, likeUrl);
+        write(createResp(true, "设置仅展示成功，请刷新网址！"));
         return null;
     }
     
@@ -68,11 +61,11 @@ public class SetOnlyDisplayAction extends BaseAction implements UserInterface{
 		this.website = website;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getLikeUrl() {
+		return likeUrl;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setLikeUrl(String likeUrl) {
+		this.likeUrl = likeUrl;
 	}
 }

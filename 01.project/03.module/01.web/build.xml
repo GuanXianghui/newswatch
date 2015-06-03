@@ -97,6 +97,16 @@
             <include name="*.jar"/>
         </fileset>
     </path>
+    <path id="spring_lib">
+        <fileset dir="${libDir}/spring">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <path id="redis_lib">
+        <fileset dir="${libDir}/redis">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
 
     <!--定义准备任务-->
     <target name="prepare" depends="clear">
@@ -117,7 +127,7 @@
     <!--构建核心部分-->
     <target name="buildWeb" depends="prepare">
         <!-- 编译src文件下java文件，jdk1.6 -->
-        <javac debug="on" nowarn="yes" source="1.6" target="1.6" srcdir="${core_src}"
+        <javac encoding="utf-8" debug="on" nowarn="yes" source="1.6" target="1.6" srcdir="${core_src}"
                destdir="${tempDir}/WEB-INF/classes">
             <classpath refid="apache_lib"/>
             <classpath refid="javamail_lib"/>
@@ -127,9 +137,11 @@
             <classpath refid="poi_lib"/>
             <classpath refid="servlet_lib"/>
             <classpath refid="struts2_lib"/>
+            <classpath refid="spring_lib"/>
+            <classpath refid="redis_lib"/>
             <patternset refid="compiler.resources"/>
         </javac>
-        <javac debug="on" nowarn="yes" source="1.6" target="1.6" srcdir="${core_test_src}"
+        <javac encoding="utf-8" debug="on" nowarn="yes" source="1.6" target="1.6" srcdir="${core_test_src}"
                destdir="${tempDir}/WEB-INF/classes">
             <classpath refid="apache_lib"/>
             <classpath refid="javamail_lib"/>
@@ -139,6 +151,8 @@
             <classpath refid="poi_lib"/>
             <classpath refid="servlet_lib"/>
             <classpath refid="struts2_lib"/>
+            <classpath refid="spring_lib"/>
+            <classpath refid="redis_lib"/>
             <patternset refid="compiler.resources"/>
         </javac>
         <!-- 编译src出来的文件，打成jar包，放到lib下 -->
@@ -155,7 +169,7 @@
         <!-- 创建classes文件夹 -->
         <mkdir dir="${tempDir}/WEB-INF/classes"/>
         <!-- properties文件转asiii码 -->
-        <native2ascii src="${core_src}" dest="${tempDir}/WEB-INF/classes" includes="**/?*.properties"/>
+        <native2ascii encoding="utf-8" src="${core_src}" dest="${tempDir}/WEB-INF/classes" includes="**/?*.properties"/>
         <!-- 拷贝非java和非properties文件到classes文件下 -->
         <copy todir="${tempDir}/WEB-INF/classes">
             <fileset dir="${core_src}">
@@ -183,6 +197,15 @@
 	            <include name="*.jar"/>
 	        </fileset>
 	        <fileset dir="${libDir}/struts2_lib">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/spring">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/redis">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${libDir}/aop">
 	            <include name="*.jar"/>
 	        </fileset>
         </copy>

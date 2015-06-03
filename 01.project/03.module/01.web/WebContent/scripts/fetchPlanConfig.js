@@ -49,17 +49,17 @@ function refreshNeedFetchPlanNews(){
                 }
                 //判是否成功
                 if (false == data["isSuccess"]) {
-                    showErrorMessage(data["message"]);
+                    showError(data["message"]);
                 } else {
                     //成功
-                	showSuccessMessage(data["message"]);
+                	showSuccess(data["message"]);
                 	var html = EMPTY;
                 	for(var i=0;i<data["newsList"].length;i++){
                 		html += "<tr id=\"config_tr_" + (++remarkCount) + "\"><td>" + (i+1) + 
                 		"</td><td>" + $("#website0").val() + 
                 		"</td><td><a id=\"config_a_" + (remarkCount) + "\" href='" + data["newsList"][i] + "' target='_blank' onclick=\"$(this).css('color', 'blue')\">" + data["newsList"][i] + "</a>" +
                 		"</td><td>" + 
-                		"<input class=\"button\" type=\"button\" onclick=\"setOnlyDisplay('" + website + "'," + remarkCount + ");\" value=\"仅展示\" />" + 
+                		"<input class=\"button\" type=\"button\" onclick=\"setOnlyDisplayPre('" + website + "'," + remarkCount + ");\" value=\"仅展示\" />" + 
                     	"<input class=\"button\" type=\"button\" onclick=\"fetchPlanConfig('" + website + "'," + remarkCount + ");\" value=\"配置抓取方案\" />" + 
                 		"</td></tr>"
                 	}
@@ -79,21 +79,32 @@ function refreshNeedFetchPlanNews(){
 }
 
 /**
- * 设置仅展示
+ * 设置仅展示准备
  * @param website
  * @param remarkCount
  */
-function setOnlyDisplay(website, remarkCount){
+function setOnlyDisplayPre(website, remarkCount){
+	document.getElementById("set_only_display_a").click();
+	var url = $("#config_a_" + remarkCount).attr("href");
+	$("#facebox #set_only_display_like_url").val(url);
+	$("#facebox #set_only_display_website").html(website);
+}
+
+/**
+ * 设置仅展示
+ */
+function setOnlyDisplay(){
 	if(confirm("您确定要设置为仅展示吗？") == false){
 		return;
 	}
-	var url = $("#config_a_" + remarkCount).attr("href");
+	var website = $("#facebox #set_only_display_website").html();
+	var likeUrl = $("#facebox #set_only_display_like_url").val();
     var SUCCESS_STR = "success";//成功编码
     $.ajax({
         type:"post",
         async:false,
         url:baseUrl + "setOnlyDisplay.do",
-        data:"website=" + website + "&url=" + url + "&token=" + token,
+        data:"website=" + website + "&likeUrl=" + filterStr(likeUrl) + "&token=" + token,
         success:function (data, textStatus) {
             if ((SUCCESS_STR == textStatus) && (null != data)) {
                 data = eval("(" + data + ")");
@@ -103,12 +114,11 @@ function setOnlyDisplay(website, remarkCount){
                 }
                 //判是否成功
                 if (false == data["isSuccess"]) {
-                    showErrorMessage(data["message"]);
+                    showError(data["message"]);
                 } else {
                     //成功
-                	showSuccessMessage(data["message"]);
-                	var configTr = $("#config_tr_" + remarkCount);
-                	configTr.css("display", "none");
+                	showSuccess(data["message"]);
+                	$.facebox.close();
                     return;
                 }
             } else {

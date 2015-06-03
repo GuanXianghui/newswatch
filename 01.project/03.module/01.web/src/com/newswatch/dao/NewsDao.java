@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.newswatch.entities.News;
 import com.newswatch.entities.UrlFilter;
+import com.newswatch.utils.DateUtils;
 
 /**
  * 新闻实体操作类
@@ -93,13 +94,16 @@ public class NewsDao {
     }
 
     /**
-     * 更新新闻状态
+     * 更新新闻只展示
      *
-     * @param news
+     * @param website
+     * @param likeUrl
      * @throws Exception
      */
-    public static void updateNewsStateByUrl(News news) throws Exception {
-        String sql = "update news set state=" + news.getState() + " where url='" + news.getUrl() + "'";
+    public static void updateNewsOnlyDisplay(String website, String likeUrl) throws Exception {
+        String sql = "update news set state=" + News.STATE_ONLY_DISPLAY + ", update_date='" + DateUtils.getCurrentDate() + 
+        		"', update_time='" + DateUtils.getCurrentTime() + "' where website='" + website + "'" + 
+	    		" AND url like '" + likeUrl + "' AND state=" + News.STATE_GRAB_URL_SUCCESS;
         DB.executeUpdate(sql);
     }
 
@@ -123,9 +127,13 @@ public class NewsDao {
      * @return
      * @throws Exception
      */
-    public static News getNextGrabNews() throws Exception {
+    public static News getNextGrabNews(List<String> processingUrlList) throws Exception {
         String sql = "SELECT id,website,url,state,times,title,date,time,author,source,content,create_date,create_time,update_date,update_time FROM news " +
-                "WHERE state in (1,3) ORDER BY state,id limit 1";
+                "WHERE state in (1,3)";
+        for(String url : processingUrlList){
+        	sql += " AND url != '" + url + "'";
+        }
+        sql += " ORDER BY state,id limit 1";
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
         ResultSet rs = DB.executeQuery(c, stmt, sql);
@@ -161,14 +169,16 @@ public class NewsDao {
     }
 
     /**
-     * 根据网站查询所有地址
-     *
+     * 根据网站分页查询所有地址
+     * @param website
+     * @param pageNo 页数 从1开始表示查询第一页
      * @return
      * @throws Exception
      */
-    public static List<String> queryAllUrlByWebsite(String website) throws Exception {
+    public static List<String> queryAllUrlByWebsiteAndPage(String website, int pageNo) throws Exception {
     	List<String> urlList = new ArrayList<String>();
-        String sql = "SELECT url FROM news where website='" + website + "'";
+        String sql = "SELECT url FROM news where website='" + website + "'"
+        		+ " limit " + ((pageNo-1)*10000) + ", " + 10000;//每页10000条
         Connection c = DB.getConn();
         Statement stmt = DB.createStatement(c);
         ResultSet rs = DB.executeQuery(c, stmt, sql);

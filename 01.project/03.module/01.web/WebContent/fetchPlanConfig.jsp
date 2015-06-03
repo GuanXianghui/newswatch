@@ -196,6 +196,30 @@
 					</table>
 				</form>
 			</div>
+			<div id="set_only_display" style="display: none;">
+				<a href="#set_only_display" rel="facebox" id="set_only_display_a"></a>
+				<form style="text-align: center;">
+					<table style="width: 500px;">
+						<tr>
+							<td>网站</td>
+							<td>
+								<span id="set_only_display_website"></span>
+							</td>
+						</tr>
+						<tr>
+							<td>模糊网址</td>
+							<td>
+								<input class="text-input large-input" type="text" id="set_only_display_like_url"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" style="text-align: center;">
+								<input class="button" type="button" onclick="setOnlyDisplay();" value="设置仅展示"/>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
         </div>
     </div>
     

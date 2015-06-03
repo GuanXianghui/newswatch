@@ -58,7 +58,7 @@ public class StrutsFilter extends StrutsPrepareAndExecuteFilter implements BaseI
             return;
         } else {
             //.do结尾才要这些判断
-            if(url.endsWith(".do") && !url.endsWith("securityCodeImage.do")){
+            if(url.endsWith(".do") && !url.endsWith("securityCodeImage.do") && !url.endsWith("grabPeople.do")){
                 String ip = IPAddressUtil.getIPAddress(request);
                 String token = request.getParameter(TOKEN_KEY);
                 logger.info("ip:[" + ip + "]，token:[" + token + "]");

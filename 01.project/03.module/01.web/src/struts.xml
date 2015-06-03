@@ -47,6 +47,8 @@
         </action>
         <action name="saveFetchPlan" class="com.newswatch.SaveFetchPlanAction">
         </action>
+        <action name="grabPeople" class="com.newswatch.GrabPeopleAction">
+        </action>
     </package>
 
     <!--

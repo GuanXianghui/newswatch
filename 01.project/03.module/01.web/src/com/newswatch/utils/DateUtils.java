@@ -1000,4 +1000,11 @@ public class DateUtils {
     
 
     private DateUtils(){}
+    
+    public static void main(String[] params) throws Exception {
+    	//2008年11月03日14:36&nbsp;&nbsp;
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月DD日HH:mm");
+        Date date = sdf.parse("2008年11月03日14:36dasdfasdf");
+        System.out.println(DateUtils.toLongDateGBKString(date));
+    }
 }

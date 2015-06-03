@@ -52,42 +52,46 @@ public class BaseUtil implements BaseInterface, SymbolInterface {
      * @throws Exception
      */
     public static List<String> queryAllDomainByWebsite(String website) throws Exception {
-    	List<String> urlList = NewsDao.queryAllUrlByWebsite(website);
 		List<String> domainList = new ArrayList<String>();
-		for(String url : urlList){
-			String httpPref = "http://";
-			if(url.startsWith(httpPref)){
-				url = url.substring(httpPref.length());
+		int pageNo = 1;
+		List<String> urlList = NewsDao.queryAllUrlByWebsiteAndPage(website, pageNo++);
+		while(urlList.size() > 0){
+			for(String url : urlList){
+				String httpPref = "http://";
+				if(url.startsWith(httpPref)){
+					url = url.substring(httpPref.length());
+					int index = url.indexOf("/");
+					if(index > 0){
+						url = url.substring(0, index);
+					}
+					url = httpPref + url;
+					if(!domainList.contains(url)){
+						domainList.add(url);
+					}
+					continue;
+				}
+				String httpsPref = "https://";
+				if(url.startsWith(httpsPref)){
+					url = url.substring(httpsPref.length());
+					int index = url.indexOf("/");
+					if(index > 0){
+						url = url.substring(0, index);
+					}
+					url = httpsPref + url;
+					if(!domainList.contains(url)){
+						domainList.add(url);
+					}
+					continue;
+				}
 				int index = url.indexOf("/");
 				if(index > 0){
 					url = url.substring(0, index);
 				}
-				url = httpPref + url;
 				if(!domainList.contains(url)){
 					domainList.add(url);
 				}
-				continue;
 			}
-			String httpsPref = "https://";
-			if(url.startsWith(httpsPref)){
-				url = url.substring(httpsPref.length());
-				int index = url.indexOf("/");
-				if(index > 0){
-					url = url.substring(0, index);
-				}
-				url = httpsPref + url;
-				if(!domainList.contains(url)){
-					domainList.add(url);
-				}
-				continue;
-			}
-			int index = url.indexOf("/");
-			if(index > 0){
-				url = url.substring(0, index);
-			}
-			if(!domainList.contains(url)){
-				domainList.add(url);
-			}
+			urlList = NewsDao.queryAllUrlByWebsiteAndPage(website, pageNo++);
 		}
 		Collections.sort(domainList);
 		return domainList;

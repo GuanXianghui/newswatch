@@ -19,7 +19,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.newswatch.entities.User;
 import com.newswatch.interfaces.BaseInterface;
 import com.newswatch.utils.BaseUtil;
-import com.newswatch.utils.DateUtil;
+import com.newswatch.utils.DateUtils;
 import com.newswatch.utils.IPAddressUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -75,9 +75,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
      * 构造函数
      */
     public BaseAction() {
-        this.date = DateUtil.getNowDate();
-        this.time = DateUtil.getNowTime();
-        this.defaultDateTime = DateUtil.getDefaultDateTime(new Date());
+        this.date = DateUtils.getCurrentDate();
+        this.time = DateUtils.getCurrentTime();
+        this.defaultDateTime = DateUtils.toLongDateString(new Date());
     }
 
     /**
